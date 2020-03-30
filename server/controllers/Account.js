@@ -1,79 +1,79 @@
 const models = require('../models');
 
-const Account = models.Account;
+const { Account } = models;
 
 const loginPage = (req, res) => {
-    res.render('login');
+  res.render('login');
 };
 
 const signupPage = (req, res) => {
-    res.render('signup');
+  res.render('signup');
 };
 
 const logout = (req, res) => {
-    res.redirect('/');
+  res.redirect('/');
 };
 
 const login = (request, response) => {
-    const req = request;
-    const res = response;
+  const req = request;
+  const res = response;
 
-    // Force cast to strings to cover some security flaws 
-    const username = `${req.body.username}`;
-    const password = `${req.body.pass}`;
+  // Force cast to strings to cover some security flaws
+  const username = `${req.body.username}`;
+  const password = `${req.body.pass}`;
 
-    if(!username || !password) {
-        return res.status(400).json({ error: 'RAWR! All fields are required!' });
+  if (!username || !password) {
+    return res.status(400).json({ error: 'RAWR! All fields are required!' });
+  }
+
+  return Account.AccountModel.authenticate(username, password, (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Wrong username or password' });
     }
-
-    return Account.AccountModel.authenticate(username, password, (err, account) => {
-        if(err || !account) {
-            return res.status(401).json({ error: 'Wrong username or password'});
-        }
-        return res.json({ redirect: '/maker' });
-    });
+    return res.json({ redirect: '/maker' });
+  });
 };
 
 const signup = (request, response) => {
-    const req = request;
-    const res = response;
+  const req = request;
+  const res = response;
 
-    // Cas to strings to cover up some security flaws
-    req.body.username = `${req.body.username}`;
-    req.body.pass = `${req.body.pass}`;
-    req.body.pass = `${req.body.pass2}`;
+  // Cas to strings to cover up some security flaws
+  req.body.username = `${req.body.username}`;
+  req.body.pass = `${req.body.pass}`;
+  req.body.pass = `${req.body.pass2}`;
 
-    if(!req.body.username || !req.body.pass || !req.body.pass2) {
-        return res.status(400).json({ error: 'RAWR! All fields are required!' });
-    }
+  if (!req.body.username || !req.body.pass || !req.body.pass2) {
+    return res.status(400).json({ error: 'RAWR! All fields are required!' });
+  }
 
-    if(req.body.pass !== req.body.pass2) {
-        return res.status(400).json({ error: 'RAWR! Passwords do not match!' });
-    }
-    
-    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-        const accountData = {
-            username: req.body.username,
-            salt,
-            password: hash,
-        };
+  if (req.body.pass !== req.body.pass2) {
+    return res.status(400).json({ error: 'RAWR! Passwords do not match!' });
+  }
 
-        const newAccount = new Account.AccountModel(accountData);
+  return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+    const accountData = {
+      username: req.body.username,
+      salt,
+      password: hash,
+    };
 
-        const savePromise = newAccount.save();
+    const newAccount = new Account.AccountModel(accountData);
 
-        savePromise.then(() => res.json({ redirect: '/maker' }));
+    const savePromise = newAccount.save();
 
-        savePromise.catch((err) => {
-            console.log(err);
+    savePromise.then(() => res.json({ redirect: '/maker' }));
 
-            if(err.code ===11000) {
-                return res.status(400).json({ error: 'Username already in use.' });
-            }
+    savePromise.catch((err) => {
+      console.log(err);
 
-            return res.status(400).json({ error: 'An error occurred' });
-        });
+      if (err.code === 11000) {
+        return res.status(400).json({ error: 'Username already in use.' });
+      }
+
+      return res.status(400).json({ error: 'An error occurred' });
     });
+  });
 };
 
 module.exports.loginPage = loginPage;
