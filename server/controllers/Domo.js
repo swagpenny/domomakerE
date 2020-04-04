@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const { Domo } = models;
+const Domo = models.Domo;
 
 const makerPage = (req, res) => {
   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
@@ -12,7 +12,8 @@ const makerPage = (req, res) => {
     }
 
     return res.render('app', {
-      csrfToken: req.csrfToken(), domos: docs,
+      csrfToken: req.csrfToken(),
+      domos: docs,
     });
   });
 };

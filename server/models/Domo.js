@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 mongoose.Promise = global.Promise;
 const _ = require('underscore');
 
@@ -43,9 +42,9 @@ DomoSchema.statics.toAPI = (doc) => ({
 
 DomoSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
-    owner: convertId(ownerId),
+    owner: convertId(ownerId)
   };
-
+  
   return DomoModel.find(search).select('name age').lean().exec(callback);
 };
 

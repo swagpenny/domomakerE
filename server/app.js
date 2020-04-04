@@ -31,21 +31,21 @@ mongoose.connect(dbURL, mongooseOptions, (err) => {
 });
 
 let redisURL = {
-  // You will need to follow the "Setting up Redis for Local Use" Instructions
-  hostname: 'redis-15586.c84.us-east-1-2.ec2.cloud.redislabs.com',
-  // replace this with the port number of your endpoint url
-  port: '15586',
+    //You will need to follow the "Setting up Redis for Local Use" Instructions
+    hostname: 'redis-15586.c84.us-east-1-2.ec2.cloud.redislabs.com',
+    //replace this with the port number of your endpoint url
+    port: '15586',
 };
 
 let redisPASS = 'w3xxBq2XseD0fhFajuCAO6i2yihyE4hv';
-if (process.env.REDISCLOUD_URL) {
-  redisURL = url.parse(process.env.REDISCLOUD_URL);
-  [, redisPASS] = redisURL.auth.split(':');
+if (process.env.REDISCLOUD_URL){
+    redisURL = url.parse(process.env.REDISCLOUD_URL);
+    [, redisPASS] = redisURL.auth.split(':');
 }
-const redisClient = redis.createClient({
-  host: redisURL.hostname,
-  port: redisURL.port,
-  password: redisPASS,
+let redisClient = redis.createClient({
+    host: redisURL.hostname, 
+    port: redisURL.port,
+    password: redisPASS,
 });
 
 // Pull in our routes
@@ -60,19 +60,19 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(session({
-  key: 'sessionid',
-  store: new RedisStore({
-    client: redisClient,
-  }),
-  secret: 'Domo Arigato',
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    httpOnly: true,
-  },
+    key: 'sessionid',
+    store: new RedisStore({
+        client: redisClient,
+    }),
+    secret: 'Domo Arigato',
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+    },
 }));
 
-app.engine('handlebars', expressHandlebars({ defaultLayout: 'main' }));
+app.engine('handlebars', expressHandlebars({ defaultLayout: 'main', }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.disable('x-powered-by');
@@ -80,10 +80,10 @@ app.use(cookieParser());
 
 app.use(csrf());
 app.use((err, req, res, next) => {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
-
-  console.log('Missing CSRF token');
-  return false;
+    if(err.code !== 'EBADCSRFTOKEN') return next(err);
+    
+    console.log('Missing CSRF token');
+    return false;
 });
 
 router(app);

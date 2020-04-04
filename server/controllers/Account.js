@@ -1,13 +1,17 @@
 const models = require('../models');
 
-const { Account } = models;
+const Account = models.Account;
 
 const loginPage = (req, res) => {
-  res.render('login', { csrfToken: req.csrfToken() });
+  res.render('login', {
+      csrfToken: req.csrfToken()
+  });
 };
 
 const signupPage = (req, res) => {
-  res.render('signup', { csrfToken: req.csrfToken() });
+  res.render('signup', {
+      csrfToken: req.csrfToken() 
+  });
 };
 
 const logout = (req, res) => {
@@ -31,8 +35,8 @@ const login = (request, response) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
-
-    req.session.account = Account.AccountModel.toAPI(account);
+      
+      req.session.account = Account.AccountModel.toAPI(account);
 
     return res.json({ redirect: '/maker' });
   });
@@ -67,8 +71,8 @@ const signup = (request, response) => {
     const savePromise = newAccount.save();
 
     savePromise.then(() => {
-      req.session.account = Account.AccountModel.toAPI(newAccount);
-      res.json({ redirect: '/maker' });
+        req.session.account = Account.AccountModel.toAPI(newAccount);
+        res.json({ redirect: '/maker' });
     });
 
     savePromise.catch((err) => {
