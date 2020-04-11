@@ -17,7 +17,6 @@ const login = (request, response) => {
   const req = request;
   const res = response;
 
-  // Force cast to strings to cover some security flaws
   const username = `${req.body.username}`;
   const password = `${req.body.pass}`;
 

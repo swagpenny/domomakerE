@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 mongoose.Promise = global.Promise;
 const _ = require('underscore');
 
@@ -23,7 +22,13 @@ const DomoSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
-
+    
+  height: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
+    
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -39,14 +44,23 @@ const DomoSchema = new mongoose.Schema({
 DomoSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   age: doc.age,
+  height: doc.height,
 });
 
 DomoSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
-    owner: convertId(ownerId),
+    owner: convertId(ownerId)
+  };
+  
+  return DomoModel.find(search).select('name height age').lean().exec(callback);
+};
+
+DomoSchema.statics.removeById = (domoId, callback) => {
+  const search = {
+    _id: convertId(domoId),
   };
 
-  return DomoModel.find(search).select('name age').lean().exec(callback);
+  return DomoModel.remove(search).exec(callback);
 };
 
 DomoModel = mongoose.model('Domo', DomoSchema);

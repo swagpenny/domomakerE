@@ -6,7 +6,7 @@ var handleDomo = function handleDomo(e) {
     width: 'hide'
   }, 350);
 
-  if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
+  if ($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoHeight").val() == '') {
     handleError("RAWR! All fields are required");
     return false;
   }
@@ -20,65 +20,78 @@ var handleDomo = function handleDomo(e) {
 };
 
 var DomoForm = function DomoForm(props) {
-  return /*#__PURE__*/React.createElement("form", {
-    id: "domoForm",
-    name: "domoForm",
-    onSubmit: handleDomo,
-    action: "/maker",
-    method: "POST",
-    className: "domoForm"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "name"
-  }, "Name: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoName",
-    type: "text",
-    name: "name",
-    placeholder: "Domo Name"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "age"
-  }, "Age: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoAge",
-    type: "text",
-    name: "age",
-    placeholder: "Domo Age"
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "csrfToken",
-    type: "hidden",
-    name: "_csrf",
-    value: props.csrf
-  }), /*#__PURE__*/React.createElement("input", {
-    className: "makeDomoSubmit",
-    type: "submit",
-    value: "Make Domo"
-  }));
+  return (/*#__PURE__*/React.createElement("form", {
+      id: "domoForm",
+      name: "domoForm",
+      onSubmit: handleDomo,
+      action: "/maker",
+      method: "POST",
+      className: "domoForm"
+    }, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "name"
+    }, "Name: "), /*#__PURE__*/React.createElement("input", {
+      id: "domoName",
+      type: "text",
+      name: "name",
+      placeholder: "Domo Name"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "age"
+    }, "Age: "), /*#__PURE__*/React.createElement("input", {
+      id: "domoAge",
+      type: "text",
+      name: "age",
+      placeholder: "Domo Age"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "height"
+    }, "Height: "), /*#__PURE__*/React.createElement("input", {
+      id: "domoHeight",
+      type: "text",
+      name: "height",
+      placeholder: "Domo Height"
+    }), /*#__PURE__*/React.createElement("input", {
+      id: "csrfToken",
+      type: "hidden",
+      name: "_csrf",
+      value: props.csrf
+    }), /*#__PURE__*/React.createElement("input", {
+      className: "makeDomoSubmit",
+      type: "submit",
+      value: "Make Domo"
+    }))
+  );
 };
 
 var DomoList = function DomoList(props) {
   if (props.domos.length === 0) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "domoList"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "emptyDomo"
-    }, "No Domos Yet"));
+    return (/*#__PURE__*/React.createElement("div", {
+        className: "domoList"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "emptyDomo"
+      }, "No Domos Yet"))
+    );
   }
 
   var domoNodes = props.domos.map(function (domo) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: domo._id,
-      className: "domo"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/domoface.jpeg",
-      alt: "domo face",
-      className: "domoFace"
-    }), /*#__PURE__*/React.createElement("h3", {
-      className: "domoName"
-    }, "Name: ", domo.name), /*#__PURE__*/React.createElement("h3", {
-      className: "domoAge"
-    }, "Age: ", domo.age));
+    return (/*#__PURE__*/React.createElement("div", {
+        key: domo._id,
+        className: "domo"
+      }, /*#__PURE__*/React.createElement("img", {
+        src: "/assets/img/domoface.jpeg",
+        alt: "domo face",
+        className: "domoFace"
+      }), /*#__PURE__*/React.createElement("h3", {
+        className: "domoName"
+      }, "Name: ", domo.name), /*#__PURE__*/React.createElement("h3", {
+        className: "domoAge"
+      }, "Age: ", domo.age), /*#__PURE__*/React.createElement("h3", {
+        className: "domoHeight"
+      }, "Height: ", domo.height))
+    );
   });
-  return /*#__PURE__*/React.createElement("div", {
-    className: "domoList"
-  }, domoNodes);
+  return (/*#__PURE__*/React.createElement("div", {
+      className: "domoList"
+    }, domoNodes)
+  );
 };
 
 var loadDomosFromServer = function loadDomosFromServer(csrf) {
